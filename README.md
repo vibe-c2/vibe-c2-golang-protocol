@@ -2,6 +2,12 @@
 
 Shared Go protocol contracts for Vibe C2.
 
+## Install
+
+```bash
+go get github.com/vibe-c2/vibe-c2-golang-protocol@latest
+```
+
 ## Quick Usage
 
 ```go
