@@ -46,12 +46,21 @@ func TestValidateOutbound_InvalidType(t *testing.T) {
 	assertValidationCode(t, err, ErrCodeInvalidType)
 }
 
-func TestValidateOutbound_MissingSourceField(t *testing.T) {
+func TestValidateOutbound_MissingEncryptedData(t *testing.T) {
 	msg := validOutboundMessage()
-	msg.Source.Tenant = ""
+	msg.EncryptedData = ""
 
 	err := ValidateOutbound(msg)
 	assertValidationCode(t, err, ErrCodeMissingField)
+}
+
+// Outbound deliberately carries no source; validation must accept its absence.
+func TestValidateOutbound_NoSourceRequired(t *testing.T) {
+	msg := validOutboundMessage()
+
+	if err := ValidateOutbound(msg); err != nil {
+		t.Fatalf("ValidateOutbound() error = %v, want nil (outbound has no source)", err)
+	}
 }
 
 func assertValidationCode(t *testing.T, err error, wantCode string) {
@@ -92,16 +101,10 @@ func validInboundMessage() InboundMinionMessage {
 
 func validOutboundMessage() OutboundMinionMessage {
 	return OutboundMinionMessage{
-		MessageID: "msg-out-1",
-		Type:      TypeOutboundMinionMessage,
-		Version:   VersionV1,
-		Timestamp: time.Now().UTC().Format(time.RFC3339),
-		Source: SourceInfo{
-			Module:         "c2",
-			ModuleInstance: "c2-1",
-			Transport:      "ws",
-			Tenant:         "default",
-		},
+		MessageID:     "msg-out-1",
+		Type:          TypeOutboundMinionMessage,
+		Version:       VersionV1,
+		Timestamp:     time.Now().UTC().Format(time.RFC3339),
 		ID:            "s-2b77df",
 		EncryptedData: "ciphertext",
 		Meta: MessageMeta{

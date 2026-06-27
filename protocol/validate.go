@@ -7,16 +7,19 @@ import (
 )
 
 func ValidateInbound(msg InboundMinionMessage) error {
-	return validateMessage(
+	if err := validateMessage(
 		msg.MessageID,
 		msg.Type,
 		msg.Version,
 		msg.Timestamp,
-		msg.Source,
 		msg.ID,
 		msg.EncryptedData,
 		TypeInboundMinionMessage,
-	)
+	); err != nil {
+		return err
+	}
+	// Inbound carries the originating channel's source; outbound does not.
+	return requireSource(msg.Source)
 }
 
 func ValidateOutbound(msg OutboundMinionMessage) error {
@@ -25,7 +28,6 @@ func ValidateOutbound(msg OutboundMinionMessage) error {
 		msg.Type,
 		msg.Version,
 		msg.Timestamp,
-		msg.Source,
 		msg.ID,
 		msg.EncryptedData,
 		TypeOutboundMinionMessage,
@@ -37,7 +39,6 @@ func validateMessage(
 	msgType string,
 	version string,
 	timestamp string,
-	source SourceInfo,
 	id string,
 	encryptedData string,
 	expectedType string,
@@ -52,9 +53,6 @@ func validateMessage(
 		return err
 	}
 	if err := requireString("timestamp", timestamp); err != nil {
-		return err
-	}
-	if err := requireSource(source); err != nil {
 		return err
 	}
 	if err := requireString("id", id); err != nil {
