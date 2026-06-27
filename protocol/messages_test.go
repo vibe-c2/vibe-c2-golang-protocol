@@ -40,7 +40,7 @@ func TestValidateInbound_InvalidTimestamp(t *testing.T) {
 
 func TestValidateOutbound_InvalidType(t *testing.T) {
 	msg := validOutboundMessage()
-	msg.Type = TypeInboundAgentMessage
+	msg.Type = TypeInboundMinionMessage
 
 	err := ValidateOutbound(msg)
 	assertValidationCode(t, err, ErrCodeInvalidType)
@@ -70,19 +70,19 @@ func assertValidationCode(t *testing.T, err error, wantCode string) {
 	}
 }
 
-func validInboundMessage() InboundAgentMessage {
-	return InboundAgentMessage{
+func validInboundMessage() InboundMinionMessage {
+	return InboundMinionMessage{
 		MessageID: "msg-in-1",
-		Type:      TypeInboundAgentMessage,
+		Type:      TypeInboundMinionMessage,
 		Version:   VersionV1,
 		Timestamp: time.Now().UTC().Format(time.RFC3339),
 		Source: SourceInfo{
-			Module:         "agent",
-			ModuleInstance: "agent-1",
+			Module:         "channel-http",
+			ModuleInstance: "channel-http-1",
 			Transport:      "ws",
 			Tenant:         "default",
 		},
-		ID:            "agent-123",
+		ID:            "s-2b77df",
 		EncryptedData: "ciphertext",
 		Meta: MessageMeta{
 			"trace_id": "trace-1",
@@ -90,10 +90,10 @@ func validInboundMessage() InboundAgentMessage {
 	}
 }
 
-func validOutboundMessage() OutboundAgentMessage {
-	return OutboundAgentMessage{
+func validOutboundMessage() OutboundMinionMessage {
+	return OutboundMinionMessage{
 		MessageID: "msg-out-1",
-		Type:      TypeOutboundAgentMessage,
+		Type:      TypeOutboundMinionMessage,
 		Version:   VersionV1,
 		Timestamp: time.Now().UTC().Format(time.RFC3339),
 		Source: SourceInfo{
@@ -102,7 +102,7 @@ func validOutboundMessage() OutboundAgentMessage {
 			Transport:      "ws",
 			Tenant:         "default",
 		},
-		ID:            "agent-123",
+		ID:            "s-2b77df",
 		EncryptedData: "ciphertext",
 		Meta: MessageMeta{
 			"trace_id": "trace-2",

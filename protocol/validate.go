@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func ValidateInbound(msg InboundAgentMessage) error {
+func ValidateInbound(msg InboundMinionMessage) error {
 	return validateMessage(
 		msg.MessageID,
 		msg.Type,
@@ -15,11 +15,11 @@ func ValidateInbound(msg InboundAgentMessage) error {
 		msg.Source,
 		msg.ID,
 		msg.EncryptedData,
-		TypeInboundAgentMessage,
+		TypeInboundMinionMessage,
 	)
 }
 
-func ValidateOutbound(msg OutboundAgentMessage) error {
+func ValidateOutbound(msg OutboundMinionMessage) error {
 	return validateMessage(
 		msg.MessageID,
 		msg.Type,
@@ -28,7 +28,7 @@ func ValidateOutbound(msg OutboundAgentMessage) error {
 		msg.Source,
 		msg.ID,
 		msg.EncryptedData,
-		TypeOutboundAgentMessage,
+		TypeOutboundMinionMessage,
 	)
 }
 
